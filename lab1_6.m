@@ -3,50 +3,40 @@ clear;
 path='';
 lab='lab_1_6_';
 
+% количество фазовых линий и радиус вокруг точки устойчивости
+circle_points_number=16;
+circle_R = 100;
+
 %входные параметры
 delta_t = 0.001; %шаг по времени
-N = 5000;%временнЫе точки
+% N = 2^(round(log2(5000)))-1; % нам нужно N как power of 2
+N=5000;
+%временнЫе точки
 t = (N+1);
-
-%начальные точки кривых для построения
-E = -10;
-G = 10;
-
-%координаты точки устойчивости
-xn = 0;
-yn = 4;
-
-%решение по времени
 t(1) = 0;
 for i=1:N
     t(i+1) = t(i)+delta_t;
 end
+
+%координаты точки устойчивости
+xS = 0;
+yS = 4;
+
 
 %начальные значения 
 x1 = (N+1);
 x2 = (N+1);
 
 %Значения для построения кривых
-for j=1:4
-    for n=E:G
-        switch j
-            %в зависимости от условия получаем координаты
-            case 1
-                x1(1) = n;
-                x2(1) = G;
-
-            case 2
-                x1(1) = G;
-                x2(1) = n;
-            
-            case 3
-                x1(1) = n;
-                x2(1) = E;
-           
-            case 4
-                x1(1) = E;
-                x2(1) = n;                
-        end
+for circ_point=1:circle_points_number
+        x1(1) = cos(2 * pi * circ_point / circle_points_number) * circle_R + xS;    
+        x2(1)= sin(2 * pi * circ_point / circle_points_number) * circle_R + yS;
+        figure(3);
+        plot(x1(1),x2(1),'b*','MarkerSize',3);
+        hold on;
+        grid on;
+                
+        
         
         % численное решение по полуявной схеме Эйлера
         for i=1:N
@@ -54,11 +44,13 @@ for j=1:4
                 x1(i+1) = (x1(i) - 3*x2(i))*delta_t + x1(i);
         end
         
+
         %построение кривых
         figure(1);
         plot(t(1:N+1),x1(1:N+1));
         hold on;
         grid on;
+        
         
         figure(2);
         plot(t(1:N+1),x2(1:N+1));
@@ -69,7 +61,11 @@ for j=1:4
         plot(x1(1:N+1),x2(1:N+1));
         hold on;
         grid on;
-    end
+        
+                figure(4);
+        plot3(x1,x2,t);
+        hold on
+        grid on;
 end
 
 %Легенда и тайтл
@@ -77,16 +73,29 @@ figure(1);
 xlabel('t');
 ylabel('x1');
 title('Динамика системы по x1');
-saveas(gcf,strcat(path,lab,'x1_ot_t.jpg'));
+hold off;
 
 figure(2);
 xlabel('t');
 ylabel('x2');
 title('Динамика системы по x2');
-saveas(gcf,strcat(path,lab,'x2_ot_t.jpg'));
+hold off;
+
 figure(3);
 xlabel('x1');
 ylabel('x2');
-plot(xn,yn,'r*','MarkerSize',8);% маркировка стационарной точки на фазовом портрете
+plot(xS,yS,'r*','MarkerSize',12);% маркировка стационарной точки на фазовом портрете
 title('Фазовый портрет системы');
-saveas(gcf,strcat(path,lab,'phas_portret.jpg'));
+hold off;
+
+figure(4);
+xlabel('x1');
+ylabel('x2');
+zlabel('t');
+hold off;
+
+
+
+
+
+title('Динамика системы по x2');
