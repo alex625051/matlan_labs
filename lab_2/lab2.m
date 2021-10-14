@@ -4,13 +4,13 @@ path='';
 lab='lab_2_';
 
 % количество фазовых линий и радиус вокруг точки устойчивости
-circle_points_number=60;
+circle_points_number=15;
 % circle_R = 6;
-scr_limit=[-100 100];
+scr_limit=[-10 10];
 
 %входные параметры
-delta_t = 0.001; %шаг по времени
-N=20000;
+delta_t = 0.000005; %шаг по времени
+N=200000;
 e1 = 1.5; sigma1 = 1; a1 =0.5;   e2 = 2; sigma2 = 0.5; a2 =1.5;
 % e1 = 1; sigma1 = 1; a1 =1;   e2 = 0.75; sigma2 = 1; a2 =0.5;
 %временнЫе точки
@@ -31,7 +31,7 @@ xS4 = (a1*e2-sigma2*e1)/(a2*a1-sigma2*sigma1);%=1
 yS4 = e2/sigma2;%=4
 xSa=[xS1,xS2,xS3,xS4];
 ySa=[yS1,yS2,yS3,yS4];
-Ra=[10,6,10,10]; % индивидуальные границы начальных условий для каждого типа точки
+Ra=[3,6,10,10]; % индивидуальные границы начальных условий для каждого типа точки
 
 po_col=['r*','r*','r*','r*'];
 
@@ -44,7 +44,7 @@ end
 
 
 
-for sp=1:4
+for sp=1:1
     clear x1;
     clear x2;
     fprintf('поток для точки %d started\n',sp);
@@ -83,6 +83,7 @@ for sp=1:4
             for n=1:N
                     x1(n+1) = x1(n)*(delta_t*(e1-sigma1*x1(n)-a1*x2(n)) + 1);
                     x2(n+1) = x2(n)*(delta_t*(e2-sigma2*x2(n)-a2*x1(n))+1);
+
             end
 
 
@@ -91,6 +92,7 @@ for sp=1:4
             plot(t(1:n),x1(1:n));            
             figure(sp*4+1);
             plot(t(1:n),x1(1:n));
+
   
 
             figure(2);
